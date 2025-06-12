@@ -1,4 +1,4 @@
-from modules import random_fact_m, say_hi_m
+from modules import random_fact_m, say_hi_m, welcome_m
 from telegram.ext import CallbackQueryHandler
 import logging
 
@@ -15,4 +15,10 @@ def listing(application):
     )
     application.add_handler(
         CallbackQueryHandler(say_hi_m.say_hi_callback, pattern="^say_hi$")
+    )
+    application.add_handler(
+        CallbackQueryHandler(random_fact_m.first_random_choice, pattern="^fact_number_one$")
+    )
+    application.add_handler(
+        CallbackQueryHandler(welcome_m.start, pattern="^start$")
     )

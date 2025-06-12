@@ -27,6 +27,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "<b>Bot menu, free to choose any options!</b>"
     )
 
-    logger.info("hi")
+    if update.message:
+        # /start — это обычное текстовое сообщение
+        await update.message.reply_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+    elif update.callback_query:
+        query = update.callback_query
+        await query.answer()
+        await query.edit_message_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
 
-    await update.message.reply_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+    # await update.message.reply_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
