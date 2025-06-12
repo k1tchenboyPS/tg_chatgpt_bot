@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/start handler"""
-    keyboard=[
+    keyboard = [
         [
             InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
             InlineKeyboardButton("😎 Привет!", callback_data="say_hi")
@@ -23,16 +23,19 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    welcome_text = (
-        "<b>Добро пожаловать в меню бота!🙋</b>"
-    )
+    welcome_text = "<b>Добро пожаловать в меню бота!🙋</b>"
 
     if update.message:
-        # /start — это обычное текстовое сообщение
         await update.message.reply_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+
     elif update.callback_query:
         query = update.callback_query
         await query.answer()
-        await query.edit_message_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
 
-    # await update.message.reply_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+        can_edit = query.message and query.message.text is not None
+
+        if can_edit:
+            await query.edit_message_text(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+        else:
+            await query.message.delete()
+            await query.message.chat.send_message(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
