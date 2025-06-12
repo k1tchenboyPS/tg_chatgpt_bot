@@ -15,16 +15,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/start handler"""
     keyboard=[
         [
-            InlineKeyboardButton("✅ Random fact", callback_data="random_fact"),
-            InlineKeyboardButton("✅ Say Hi", callback_data="say_hi")
+            InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
+            InlineKeyboardButton("😎 Привет!", callback_data="say_hi")
         ],
-        [InlineKeyboardButton("❌ Random fact", callback_data="random_fact")]
+        [InlineKeyboardButton("❌ В процессе", callback_data="random_fact")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     welcome_text = (
-        "<b>Bot menu, free to choose any options!</b>"
+        "<b>Добро пожаловать в меню бота!🙋</b>"
     )
 
     if update.message:

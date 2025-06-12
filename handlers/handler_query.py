@@ -17,7 +17,7 @@ def listing(application):
         CallbackQueryHandler(say_hi_m.say_hi_callback, pattern="^say_hi$")
     )
     application.add_handler(
-        CallbackQueryHandler(random_fact_m.first_random_choice, pattern="^fact_number_one$")
+        CallbackQueryHandler(random_fact_m.generate_random_fact, pattern="^generate_fact:(.+)$")
     )
     application.add_handler(
         CallbackQueryHandler(welcome_m.start, pattern="^start$")
