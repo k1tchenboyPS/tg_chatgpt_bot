@@ -1,7 +1,7 @@
 import logging
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler
 from config import TG_BOT_TOKEN
-from handlers import basic
+from handlers import handler_command, handler_query
 
 logging.basicConfig(
 
@@ -12,11 +12,10 @@ logger = logging.getLogger(__name__)
 def main():
     try:
         application = Application.builder().token(TG_BOT_TOKEN).build()
-        application.add_handler(CommandHandler("start", basic.start))
-        # application.add_handler(CommandHandler("random", basic_fact.random_fact))
-        # application.add_handler(CallbackQueryHandler(random_fact.random_fact_callback, pattern="^random_"))
-        #
-        # application.add_handler(CallbackQueryHandler(basic.menu_callback))
+
+        handler_command.listing(application)
+        handler_query.listing(application)
+
         logger.info("Bot started")
         application.run_polling()
 
