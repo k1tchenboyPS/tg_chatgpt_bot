@@ -3,7 +3,7 @@ name = "tg-chatgpt-bot"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "ZmeyaPitona",email = "secret"}
+    {name = "ZmeyaPitona",email = "secret3"}
 ]
 readme = "README.md"
 requires-python = ">=3.13"
