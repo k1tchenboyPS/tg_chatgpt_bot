@@ -3,11 +3,12 @@ name = "tg-chatgpt-bot"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "ZmeyaPitona",email = "secret1"}
+    {name = "k1tchenboyPS",email = "pozdniakoff.alex@gmail.com"}
 ]
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "python-telegram-bot (>=22.1,<23.0)"
 ]
 
 
