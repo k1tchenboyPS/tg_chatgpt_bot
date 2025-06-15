@@ -1,6 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, ConversationHandler
 
 """
 logging — модуль для логирования.
@@ -13,7 +13,9 @@ logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/start handler"""
-    context.user_data["chat_history"] = []
+    context.user_data.clear()
+    return_code = ConversationHandler.END
+
     keyboard = [
         [
             InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
@@ -40,3 +42,4 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         else:
             await query.message.delete()
             await query.message.chat.send_message(welcome_text, parse_mode='HTML', reply_markup=reply_markup)
+    return return_code

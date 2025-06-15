@@ -89,6 +89,7 @@ async def gpt_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработка сообщения пользователя для ChatGPT"""
+    logger.info("chatgpt answer, not personality")
     try:
         user_message = update.message.text
 

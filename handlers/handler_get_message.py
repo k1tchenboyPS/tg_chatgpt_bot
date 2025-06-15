@@ -1,6 +1,7 @@
 from telegram.ext import CommandHandler, MessageHandler, CallbackQueryHandler, ConversationHandler, filters
 from modules import chatgpt_interface_m as chat
 from modules import personality_chat_m as pers_chat
+from modules import welcome_m
 import logging
 
 logger = logging.getLogger(__name__)
@@ -21,6 +22,8 @@ def listing(application):
             ]
         },
         fallbacks=[
+            CommandHandler("start", welcome_m.start),
+            CallbackQueryHandler(welcome_m.start, pattern="^start$")
         ],
         per_chat=True
     )
