@@ -1,7 +1,7 @@
 import logging
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler
+from telegram.ext import Application
 from config import TG_BOT_TOKEN
-from handlers import handler_command, handler_query
+from handlers import handler_command, handler_query, handler_get_message
 
 logging.basicConfig(
 
@@ -13,6 +13,7 @@ def main():
     try:
         application = Application.builder().token(TG_BOT_TOKEN).build()
 
+        handler_get_message.listing(application)
         handler_command.listing(application)
         handler_query.listing(application)
 

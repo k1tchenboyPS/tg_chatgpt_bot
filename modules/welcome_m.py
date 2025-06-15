@@ -13,10 +13,11 @@ logger = logging.getLogger(__name__)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/start handler"""
+    context.user_data["chat_history"] = []
     keyboard = [
         [
             InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
-            InlineKeyboardButton("😎 Привет!", callback_data="say_hi")
+            InlineKeyboardButton("🤖 GPT-чат", callback_data="gpt")
         ],
         [InlineKeyboardButton("❌ В процессе", callback_data="random_fact")]
     ]

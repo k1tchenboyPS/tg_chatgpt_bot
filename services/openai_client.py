@@ -7,7 +7,6 @@ client = AsyncOpenAI(api_key=GPT_TOKEN)
 
 async def get_random_fact(sys_conten=None, user_content=None):
     try:
-        # Значения по умолчанию
         if sys_conten is None:
             sys_conten = (
                 "Ты — суперэрудированный AI, прочитавший миллионы книг, знаешь редкие, удивительные факты "
@@ -40,3 +39,23 @@ async def get_random_fact(sys_conten=None, user_content=None):
     except Exception as e:
         logger.error(f"Error while trying to get response from chatGPT: {e}")
         return "⚠️ Не удалось получить факт"
+
+async def get_chatgpt_response(chat_history: list[dict]):
+    """Получить ответ от ChatGPT с учетом истории сообщений"""
+    try:
+        response = await client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "Ты полезный помощник. Отвечай на русском языке, будь дружелюбным и информативным. Если не знаешь ответ, честно об этом скажи."}
+            ] + chat_history,
+            max_tokens=1000,
+            temperature=0.7
+        )
+
+        answer = response.choices[0].message.content.strip()
+        logger.info("Ответ успешно получен от OpenAI")
+        return answer
+
+    except Exception as e:
+        logger.error(f"Ошибка при получении ответа от OpenAI: {e}")
+        return "😔 Извините, произошла ошибка при обращении к ChatGPT. Попробуйте позже!"

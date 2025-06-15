@@ -1,4 +1,4 @@
-from modules import random_fact_m, say_hi_m, welcome_m
+from modules import random_fact_m, say_hi_m, welcome_m, chatgpt_interface_m
 from telegram.ext import CallbackQueryHandler
 import logging
 
@@ -21,4 +21,7 @@ def listing(application):
     )
     application.add_handler(
         CallbackQueryHandler(welcome_m.start, pattern="^start$")
+    )
+    application.add_handler(
+        CallbackQueryHandler(chatgpt_interface_m.gpt_command, pattern="^gpt$")
     )
