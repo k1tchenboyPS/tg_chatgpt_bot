@@ -26,3 +26,4 @@ RANDOM_FACT_PROMPTS = {
         )
     }
 }
+

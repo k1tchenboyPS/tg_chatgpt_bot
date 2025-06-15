@@ -19,7 +19,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
             InlineKeyboardButton("🤖 GPT-чат", callback_data="gpt")
         ],
-        [InlineKeyboardButton("❌ В процессе", callback_data="random_fact")]
+        [InlineKeyboardButton("💬 Общение с личностями", callback_data="talk")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
