@@ -1,4 +1,4 @@
-from modules import random_fact_m, say_hi_m, welcome_m, chatgpt_interface_m, personality_chat_m
+from modules import random_fact_m, say_hi_m, welcome_m, chatgpt_interface_m, personality_chat_m, quiz_m
 from telegram.ext import CallbackQueryHandler
 import logging
 
@@ -26,3 +26,9 @@ def listing(application):
     application.add_handler(
         CallbackQueryHandler(personality_chat_m.per_chat_start, pattern="^person_talk:(.+)$")
     )
+    # application.add_handler(
+    #     CallbackQueryHandler(quiz_m.quiz_command, pattern="quiz$")
+    # )
+    # application.add_handler(
+    #     CallbackQueryHandler(quiz_m.topic_selected, pattern="quiz_topic_(.+)$")
+    # )

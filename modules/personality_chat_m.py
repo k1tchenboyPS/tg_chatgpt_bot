@@ -3,11 +3,13 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from services.openai_client import personality_chatgpt_response
 import os
+from handlers.reset_conversation_handler import reset_conv_handler
 
 logger = logging.getLogger(__name__)
 
+from handlers.flag import *
 
-WAITING_FOR_MESSAGE = 2
+# PERS_CHAT_FLAG = 2
 
 CAPTION = (
     "📌 <b>Общение с личностями:</b>\n\n"
@@ -41,11 +43,12 @@ PERELMAN_CAPTION = (
 )
 
 async def per_chat_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
     return await per_chat_menu(update, context)
-
 
 async def per_chat_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
+        # reset_conv_handler()
         # Сброс истории для текущего пользователя
         context.user_data["chat_history"] = []
         context.user_data.pop("person_caption", None)
@@ -94,6 +97,7 @@ async def per_chat_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def per_chat_start(update: Update, context: ContextTypes.DEFAULT_TYPE, photo_name = None, caption = None):
     try:
+        context.user_data.clear()
         context.user_data["chat_history"] = []
 
         query = update.callback_query
@@ -159,7 +163,7 @@ async def per_chat_start(update: Update, context: ContextTypes.DEFAULT_TYPE, pho
             )
 
         logger.info(">>> gpt_start: entering why WAITING_FOR_MESSAGE")
-        return WAITING_FOR_MESSAGE
+        return Flags.PERS_CHAT_FLAG
 
 
     except Exception as e:
@@ -174,6 +178,9 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
     """Обработка сообщения пользователя для ChatGPT"""
     try:
         user_message = update.message.text
+        if user_message in ["/talk", "/gpt", "/start"]:
+            logger.info(f"[TALK]: {user_message}")
+            return reset_conv_handler()
 
         chat_history = context.user_data.get("chat_history", [])
         chat_history.append({"role": "user", "content": user_message})
@@ -184,6 +191,7 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
         gpt_response = await personality_chatgpt_response(chat_history, caption)
         chat_history.append({"role": "assistant", "content": gpt_response})
         context.user_data["chat_history"] = chat_history
+        logger.info(f"processing_msg: {user_message}")
 
         keyboard = [
             [InlineKeyboardButton("🚪 Выбрать другую личность", callback_data="talk")],
@@ -197,12 +205,14 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
             parse_mode='HTML',
             reply_markup=reply_markup
         )
+        logger.info(f"processing_msg: {user_message}")
+        return Flags.PERS_CHAT_FLAG
 
-        return WAITING_FOR_MESSAGE
 
     except Exception as e:
         logger.error(f"Ошибка при обработке сообщения для ChatGPT: {e}")
         await update.message.reply_text(
             "😔 Произошла ошибка при обработке вашего сообщения. Попробуйте еще раз или вернитесь в главное меню."
         )
-        return WAITING_FOR_MESSAGE
+        return Flags.PERS_CHAT_FLAG
+        # return reset_conv_handler()

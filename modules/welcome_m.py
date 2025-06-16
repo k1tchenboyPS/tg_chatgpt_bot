@@ -15,13 +15,13 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """/start handler"""
     context.user_data.clear()
     return_code = ConversationHandler.END
-
     keyboard = [
         [
             InlineKeyboardButton("🎲 Факт", callback_data="random_fact"),
             InlineKeyboardButton("🤖 GPT-чат", callback_data="gpt")
         ],
-        [InlineKeyboardButton("💬 Общение с личностями", callback_data="talk")]
+        [InlineKeyboardButton("💬 Общение с личностями", callback_data="talk")],
+        [InlineKeyboardButton("🧠 Играть в quiz", callback_data="quiz")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)

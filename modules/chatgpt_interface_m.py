@@ -1,13 +1,15 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, ConversationHandler
 from services.openai_client import get_chatgpt_response
 import os
+from handlers.reset_conversation_handler import reset_conv_handler
 
+from handlers.flag import *
 logger = logging.getLogger(__name__)
 
 
-WAITING_FOR_MESSAGE = 1
+# WAITING_FOR_MESSAGE = 1
 
 CAPTION = ("🤖 <b>Чат с GPT:</b>\n\n"
            "🤔<b>Не знаешь, с чего начать?</b>\n"
@@ -16,11 +18,13 @@ CAPTION = ("🤖 <b>Чат с GPT:</b>\n\n"
            "💡 Пора включить воображение на максимум!")
 
 async def gpt_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    context.user_data.clear()
     return await gpt_start(update, context)
 
 
 async def gpt_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
+        # reset_conv_handler()
         # Сброс истории для текущего пользователя
         context.user_data["chat_history"] = []
 
@@ -60,7 +64,8 @@ async def gpt_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
 
         logger.info(">>> gpt_start: entering WAITING_FOR_MESSAGE")
-        return WAITING_FOR_MESSAGE
+        # return WAITING_FOR_MESSAGE
+        return Flags.WAITING_FOR_MESSAGE
 
     except Exception as e:
         logger.error(f"Ошибка при запуске ChatGPT интерфейса: {e}")
@@ -93,6 +98,10 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE)
     try:
         user_message = update.message.text
 
+        if user_message in ["/talk", "/gpt", "/start"]:
+            logger.info(f"[GPT]: {user_message}")
+            return reset_conv_handler()
+
         chat_history = context.user_data.get("chat_history", [])
         chat_history.append({"role": "user", "content": user_message})
 
@@ -116,12 +125,15 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE)
             parse_mode='HTML',
             reply_markup=reply_markup
         )
-
-        return WAITING_FOR_MESSAGE
+        # return WAITING_FOR_MESSAGE
+        # return Flags.WAITING_FOR_MESSAGE
+        return Flags.WAITING_FOR_MESSAGE
 
     except Exception as e:
         logger.error(f"Ошибка при обработке сообщения для ChatGPT: {e}")
         await update.message.reply_text(
             "😔 Произошла ошибка при обработке вашего сообщения. Попробуйте еще раз или вернитесь в главное меню."
         )
-        return WAITING_FOR_MESSAGE
+        # return WAITING_FOR_MESSAGE
+        # return Flags.WAITING_FOR_MESSAGE
+        return reset_conv_handler()
