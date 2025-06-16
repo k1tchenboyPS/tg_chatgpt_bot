@@ -3,7 +3,6 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from services.openai_client import personality_chatgpt_response
 import os
-from handlers.reset_conversation_handler import reset_conv_handler
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ CAPTION = (
 )
 
 TESLA_CAPTION = (
-    "🔬 <b>Общение с Николой Тесла:</b>\n\n"
+    "🔬 <b>Общение с Николой Теслой:</b>\n\n"
     "Никола Тесла — изобретатель и инженер, чьи открытия в области электричества, магнетизма и беспроводной передачи"
     " энергии изменили ход истории.\n\n"
     "✍️ Напиши свой вопрос в чат, чтобы начать общение."
@@ -178,9 +177,6 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
     """Обработка сообщения пользователя для ChatGPT"""
     try:
         user_message = update.message.text
-        if user_message in ["/talk", "/gpt", "/start"]:
-            logger.info(f"[TALK]: {user_message}")
-            return reset_conv_handler()
 
         chat_history = context.user_data.get("chat_history", [])
         chat_history.append({"role": "user", "content": user_message})
@@ -215,4 +211,3 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
             "😔 Произошла ошибка при обработке вашего сообщения. Попробуйте еще раз или вернитесь в главное меню."
         )
         return Flags.PERS_CHAT_FLAG
-        # return reset_conv_handler()

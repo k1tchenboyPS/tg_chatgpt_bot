@@ -3,7 +3,6 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, ConversationHandler
 from services.openai_client import get_chatgpt_response
 import os
-from handlers.reset_conversation_handler import reset_conv_handler
 
 from handlers.flag import *
 logger = logging.getLogger(__name__)
@@ -98,10 +97,6 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE)
     try:
         user_message = update.message.text
 
-        if user_message in ["/talk", "/gpt", "/start"]:
-            logger.info(f"[GPT]: {user_message}")
-            return reset_conv_handler()
-
         chat_history = context.user_data.get("chat_history", [])
         chat_history.append({"role": "user", "content": user_message})
 
@@ -135,5 +130,4 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE)
             "😔 Произошла ошибка при обработке вашего сообщения. Попробуйте еще раз или вернитесь в главное меню."
         )
         # return WAITING_FOR_MESSAGE
-        # return Flags.WAITING_FOR_MESSAGE
-        return reset_conv_handler()
+        return Flags.WAITING_FOR_MESSAGE
