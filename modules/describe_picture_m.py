@@ -63,13 +63,24 @@ async def handle_picture(update: Update, context: ContextTypes.DEFAULT_TYPE):
         file = await photo.get_file()
         path = f"/tmp/{file.file_id}.jpg"
         await file.download_to_drive(path)
+        await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
+        processing_msg = await update.message.reply_text("🤔 Обрабатываю ваш запрос... ⏳")
 
-        await update.message.reply_text("⏳ Обрабатываю изображение через GPT...")
+        keyboard = [
+            [InlineKeyboardButton("🖼 Начать сначала", callback_data="picture")],
+            [InlineKeyboardButton("🏠 Вернуться в меню", callback_data="start")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
         response = await describe_image_with_gpt(path)
-        await update.message.reply_text(response)
+        await processing_msg.delete()
+        await update.message.reply_text(
+            f"🤖 <b>GPT смог определить:</b>\n\n{response}",
+            parse_mode='HTML',
+            reply_markup=reply_markup
+        )
+        return ConversationHandler.END
 
     except Exception as e:
         logger.error(f"❌ Ошибка при обработке изображения: {e}")
         await update.message.reply_text("❌ Ошибка при обработке изображения.")
-
-    return ConversationHandler.END
+        return ConversationHandler.END

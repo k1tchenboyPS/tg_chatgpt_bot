@@ -26,9 +26,9 @@ def listing(application):
     application.add_handler(
         CallbackQueryHandler(personality_chat_m.per_chat_start, pattern="^person_talk:(.+)$")
     )
-    # application.add_handler(
-    #     CallbackQueryHandler(describe_picture_m.des_picture_command, pattern="^picture$")
-    # )
+    application.add_handler(
+        CallbackQueryHandler(quiz_m.quiz_command, pattern="^quiz$")
+    )
     # application.add_handler(
     #     CallbackQueryHandler(quiz_m.quiz_command, pattern="quiz$")
     # )

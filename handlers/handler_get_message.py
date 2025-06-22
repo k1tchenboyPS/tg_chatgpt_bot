@@ -81,8 +81,8 @@ def listing(application):
 
     quiz_conversation = ConversationHandler(
         entry_points=[
-            CallbackQueryHandler(quiz_m.quiz_start, pattern="^quiz_interface$"),
-            CommandHandler("quiz", quiz_m.quiz_command)
+            CommandHandler("quiz", quiz_m.quiz_command),
+            CallbackQueryHandler(quiz_m.quiz_start, pattern="^quiz_interface$")
         ],
         states={
             Flags.SELECTING_TOPIC: [
