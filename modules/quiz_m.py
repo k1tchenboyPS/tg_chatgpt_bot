@@ -5,17 +5,13 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from services.openai_client import get_chatgpt_response
 from services.quiz_topics import get_quiz_topics_keyboard, get_quiz_topic_data, get_quiz_continue_keyboard
-
+from handlers.flag import *
 logger = logging.getLogger(__name__)
-
-SELECTING_TOPIC, ANSWERING_QUESTION = range(2)
-
 
 async def quiz_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработка команды /quiz"""
     logger.info('Обрабатываю нажатие на /quiz')
-    await quiz_start(update, context)
-
+    return await quiz_start(update, context)
 
 async def quiz_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logger.info('Обрабатываю quiz_start')
@@ -74,8 +70,8 @@ async def quiz_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     parse_mode='HTML',
                     reply_markup=keyboard
                 )
-
-        return SELECTING_TOPIC
+        logger.info("return >> Flags.SELECTING_TOPIC")
+        return Flags.SELECTING_TOPIC
 
     except Exception as e:
         logger.error(f"Ошибка при запуске квиза: {e}")
@@ -89,13 +85,15 @@ async def quiz_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return -1
 
 
-async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE, topic_key: str = None):
     logger.info('Обрабатываю topic_selected')
     query = update.callback_query
     await query.answer()
 
     try:
-        topic_key = query.data.replace("quiz_topic_", "")
+        if not topic_key:
+            topic_key = query.data.replace("quiz_topic_", "")
+
         topic_data = get_quiz_topic_data(topic_key)
 
         if not topic_data:
@@ -140,7 +138,7 @@ async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 parse_mode='HTML'
             )
         logger.info(">>> returning ANSWERING_QUESTION IN TOPIC SELECTED")
-        return ANSWERING_QUESTION
+        return Flags.ANSWERING_QUESTION
 
     except Exception as e:
         logger.error(f"Ошибка при выборе темы квиза: {e}")
@@ -215,7 +213,7 @@ async def handle_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE)
             reply_markup=keyboard
         )
         logger.info(">>> returning ANSWERING_QUESTION")
-        return ANSWERING_QUESTION
+        return Flags.ANSWERING_QUESTION
 
     except Exception as e:
         logger.error(f"Ошибка при обработке ответа квиза: {e}")
@@ -223,7 +221,7 @@ async def handle_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE)
             "😔 Произошла ошибка при проверке ответа. Попробуйте еще раз."
         )
         logger.info(">>> returning ANSWERING_QUESTION")
-        return ANSWERING_QUESTION
+        return Flags.ANSWERING_QUESTION
 
 
 async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -232,16 +230,10 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
     await query.answer()
 
     try:
+        logger.info(f"[DATA] {query.data}")
         if query.data.startswith("quiz_continue_"):
-            # Продолжаем с той же темой
             topic_key = query.data.replace("quiz_continue_", "")
-            context.user_data['current_quiz_topic'] = topic_key
-            context.user_data['quiz_topic_data'] = get_quiz_topic_data(topic_key)
-
-            # Перенаправляем на выбор темы (это сгенерирует новый вопрос)
-            fake_query_data = f"quiz_topic_{topic_key}"
-            query.data = fake_query_data
-            return await topic_selected(update, context)
+            return await topic_selected(update, context, topic_key=topic_key)
 
         elif query.data == "quiz_change_topic":
             return await quiz_start(update, context)
@@ -308,7 +300,7 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
         await query.edit_message_text("😔 Произошла ошибка. Попробуйте еще раз.")
         return -1
 
-    return ANSWERING_QUESTION
+    return Flags.ANSWERING_QUESTION
 
 
 def extract_correct_answer(question_text):

@@ -167,7 +167,6 @@ async def per_chat_start(update: Update, context: ContextTypes.DEFAULT_TYPE, pho
 
     except Exception as e:
         logger.error(f"Ошибка при запуске ChatGPT интерфейса: {e}")
-        error_text = "😔 Произошла ошибка при запуске ChatGPT интерфейса. Попробуйте позже."
 
 async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE, caption=None):
     logger.info("handle_gpt_message")

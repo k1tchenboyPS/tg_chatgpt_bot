@@ -1,7 +1,8 @@
 import logging
 from telegram.ext import Application
-from config import TG_BOT_TOKEN
+from config import TG_BOT_TOKEN, GPT_TOKEN
 from handlers import handler_command, handler_query, handler_get_message
+import openai
 
 logging.basicConfig(
 
@@ -16,6 +17,13 @@ def main():
         handler_get_message.listing(application)
         handler_command.listing(application)
         handler_query.listing(application)
+
+        # openai.api_key = GPT_TOKEN
+        # models = openai.models.list()
+        #
+        # for model in models:
+        #     if "gpt-4" in model.id:
+        #         logger.info(f"Model: {model.id}")
 
         logger.info("Bot started")
         application.run_polling()

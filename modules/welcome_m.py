@@ -21,7 +21,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             InlineKeyboardButton("🤖 GPT-чат", callback_data="gpt")
         ],
         [InlineKeyboardButton("💬 Общение с личностями", callback_data="talk")],
-        [InlineKeyboardButton("🧠 Играть в quiz", callback_data="quiz")]
+        [InlineKeyboardButton("🧠 Играть в quiz", callback_data="quiz")],
+        [InlineKeyboardButton("🖼 Распознавание изображений", callback_data="picture")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)

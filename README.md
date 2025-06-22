@@ -1,4 +1,4 @@
-# tg_chatgpt_bot
+ч# tg_chatgpt_bot
 
 # Проект "Telegram/ChatGPT"
 
