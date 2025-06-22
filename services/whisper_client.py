@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 model = whisper.load_model("base")
 
-async def transcribe_audio(path: str) -> str:
+async def transcribe_audio(path):
     try:
         loop = asyncio.get_event_loop()
 

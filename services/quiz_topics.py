@@ -75,7 +75,6 @@ D) [вариант 4]
 
 
 def get_quiz_topics_keyboard():
-    """Возвращает клавиатуру с темами квиза"""
     keyboard = []
     for topic_key, topic_data in QUIZ_TOPICS.items():
         keyboard.append([InlineKeyboardButton(topic_data["name"], callback_data=f"quiz_topic_{topic_key}")])
@@ -85,12 +84,10 @@ def get_quiz_topics_keyboard():
 
 
 def get_quiz_topic_data(topic_key):
-    """Возвращает данные темы по ключу"""
     return QUIZ_TOPICS.get(topic_key)
 
 
 def get_quiz_continue_keyboard(topic_key):
-    """Возвращает клавиатуру для продолжения квиза"""
     keyboard = [
         [InlineKeyboardButton("🎯 Ещё вопрос", callback_data=f"quiz_continue_{topic_key}")],
         [InlineKeyboardButton("🔄 Сменить тему", callback_data="quiz_change_topic")],

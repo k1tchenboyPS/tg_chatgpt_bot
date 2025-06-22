@@ -3,7 +3,7 @@ from telegram.ext import CommandHandler, ConversationHandler
 import logging
 
 logger = logging.getLogger(__name__)
-
+"""Оработка команд"""
 def listing(application):
     application.add_handler(CommandHandler("start", welcome_m.start))
     application.add_handler(CommandHandler("random", random_fact_m.random_fact_callback))

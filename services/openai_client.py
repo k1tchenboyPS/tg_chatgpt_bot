@@ -42,7 +42,6 @@ async def get_random_fact(sys_conten=None, user_content=None):
         return "⚠️ Не удалось получить факт"
 
 async def get_chatgpt_response(chat_history: list[dict]):
-    """Получить ответ от ChatGPT с учетом истории сообщений"""
     try:
         response = await client.chat.completions.create(
             model="gpt-3.5-turbo",

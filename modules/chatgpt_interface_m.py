@@ -7,9 +7,6 @@ import os
 from handlers.flag import *
 logger = logging.getLogger(__name__)
 
-
-# WAITING_FOR_MESSAGE = 1
-
 CAPTION = ("🤖 <b>Чат с GPT:</b>\n\n"
            "🤔<b>Не знаешь, с чего начать?</b>\n"
            "Напиши первое, что приходит в голову.\n"

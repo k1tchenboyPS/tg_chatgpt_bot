@@ -38,7 +38,6 @@ async def des_picture_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
             logger.warning("❌ des_picture_menu: no valid update source")
             return ConversationHandler.END
 
-        # Меню с кнопкой
         keyboard = [[InlineKeyboardButton("🏠 Вернуться в меню", callback_data="start")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await chat.send_photo(

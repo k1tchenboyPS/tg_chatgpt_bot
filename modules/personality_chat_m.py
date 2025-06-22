@@ -3,12 +3,9 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
 from services.openai_client import personality_chatgpt_response
 import os
-
-logger = logging.getLogger(__name__)
-
 from handlers.flag import *
 
-# PERS_CHAT_FLAG = 2
+logger = logging.getLogger(__name__)
 
 CAPTION = (
     "📌 <b>Общение с личностями:</b>\n\n"
@@ -47,8 +44,6 @@ async def per_chat_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def per_chat_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        # reset_conv_handler()
-        # Сброс истории для текущего пользователя
         context.user_data["chat_history"] = []
         context.user_data.pop("person_caption", None)
 
@@ -173,7 +168,6 @@ async def handle_gpt_message(update: Update, context: ContextTypes.DEFAULT_TYPE,
     caption = context.user_data.get("person_caption")
     person_name = context.user_data.get("person_name")
 
-    """Обработка сообщения пользователя для ChatGPT"""
     try:
         user_message = update.message.text
 

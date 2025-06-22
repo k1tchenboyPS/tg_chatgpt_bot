@@ -18,13 +18,6 @@ def main():
         handler_command.listing(application)
         handler_query.listing(application)
 
-        # openai.api_key = GPT_TOKEN
-        # models = openai.models.list()
-        #
-        # for model in models:
-        #     if "gpt-4" in model.id:
-        #         logger.info(f"Model: {model.id}")
-
         logger.info("Bot started")
         application.run_polling()
 

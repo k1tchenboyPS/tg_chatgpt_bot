@@ -1,5 +1,3 @@
-"""Модуль для обработки random fact"""
-
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -67,8 +65,6 @@ async def generate_random_fact(update: Update, context: ContextTypes.DEFAULT_TYP
             sys_conten=prompts["system"],
             user_content=prompts["user"]
         )
-
-        # Кнопки
         keyboard = [
             [InlineKeyboardButton("🎲 Новый факт", callback_data=f"generate_fact:{fact_type}")],
             [InlineKeyboardButton("🚪 Другой формат фактов", callback_data="random_fact")],

@@ -9,7 +9,6 @@ from handlers.flag import *
 logger = logging.getLogger(__name__)
 
 async def quiz_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Обработка команды /quiz"""
     logger.info('Обрабатываю нажатие на /quiz')
     return await quiz_start(update, context)
 
@@ -86,7 +85,6 @@ async def quiz_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE, topic_key: str = None):
-    logger.info('Обрабатываю topic_selected')
     query = update.callback_query
     await query.answer()
 
@@ -172,17 +170,14 @@ async def handle_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await context.bot.send_chat_action(chat_id=update.effective_chat.id, action="typing")
         is_correct = user_answer == correct_answer
 
-        # Обновляем счетчик
         context.user_data['quiz_total'] += 1
         if is_correct:
             context.user_data['quiz_score'] += 1
 
-        # Отправляем сообщение о том, что проверяем ответ
         processing_msg = await update.message.reply_text(
             f"{topic_data['emoji']} Проверяю ответ... ⏳"
         )
 
-        # Получаем детальный анализ ответа от ChatGPT
         analysis_prompt = f"""Пользователь ответил '{user_answer}' на вопрос:
         {current_question}
 
@@ -194,16 +189,13 @@ async def handle_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE)
         chat_history.append({"role": "user", "content": analysis_prompt + "Ты эксперт по квизам, объясняешь ответы понятно и интересно."})
         detailed_response = await get_chatgpt_response(chat_history)
 
-        # Формируем результат
         if is_correct:
             result_text = f"✅ <b>Правильно!</b>\n\n{detailed_response}"
         else:
             result_text = f"❌ <b>Неправильно!</b>\n\nПравильный ответ: <b>{correct_answer}</b>\n\n{detailed_response}"
 
-        # Кнопки для продолжения
         keyboard = get_quiz_continue_keyboard(context.user_data['current_quiz_topic'])
 
-        # Удаляем сообщение об обработке и отправляем результат
         await processing_msg.delete()
         await update.message.reply_text(
             f"{topic_data['emoji']} <b>Результат квиза</b>\n\n"
@@ -225,7 +217,6 @@ async def handle_quiz_answer(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Обработка кнопок в квизе"""
     query = update.callback_query
     await query.answer()
 
@@ -239,7 +230,6 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
             return await quiz_start(update, context)
 
         elif query.data == "quiz_finish":
-            # Показываем финальный результат
             score = context.user_data.get('quiz_score', 0)
             total = context.user_data.get('quiz_total', 0)
 
@@ -271,7 +261,6 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
                 "Спасибо за участие! 🎉"
             )
 
-            # Очищаем данные квиза
             context.user_data.pop('quiz_score', None)
             context.user_data.pop('quiz_total', None)
             context.user_data.pop('current_quiz_topic', None)
@@ -279,7 +268,6 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
             context.user_data.pop('current_question', None)
             context.user_data.pop('correct_answer', None)
 
-            # Создаем кнопки главного меню
             keyboard = [
                 [InlineKeyboardButton("🎲 Случайный факт", callback_data="random_interface")],
                 [InlineKeyboardButton("🤖 ChatGPT", callback_data="gpt_interface")],
@@ -304,7 +292,6 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
 
 
 def extract_correct_answer(question_text):
-    """Извлекает правильный ответ из текста вопроса"""
     try:
         lines = question_text.split('\n')
         for line in lines:
@@ -317,7 +304,7 @@ def extract_correct_answer(question_text):
         if match:
             return match.group(1)
 
-        return 'A'  # Fallback
+        return 'A'
     except Exception as e:
         logger.error(f"Ошибка при извлечении правильного ответа: {e}")
         return 'A'

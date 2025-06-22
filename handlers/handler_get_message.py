@@ -9,7 +9,10 @@ from handlers.flag import *
 import asyncio
 from telegram.ext import ContextTypes
 from telegram import Update
-
+"""
+Обработка сообщений от пользователя. 
+Добавлены функции, чтобы исключить сохранение флагов при переходе в другой режим.
+"""
 logger = logging.getLogger(__name__)
 async def exit_and_prompt_gpt(update, context):
     await update.message.reply_text("😔 Мне пришлось отменить твою команду,"

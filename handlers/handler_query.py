@@ -3,7 +3,7 @@ from telegram.ext import CallbackQueryHandler
 import logging
 
 logger = logging.getLogger(__name__)
-
+"""Связь кнопок бота с функциями-обработчиками"""
 def listing(application):
     application.add_handler(
         CallbackQueryHandler(random_fact_m.random_fact_callback, pattern="^random_fact$")
