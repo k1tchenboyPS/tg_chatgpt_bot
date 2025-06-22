@@ -3,6 +3,7 @@ from modules import chatgpt_interface_m as chat
 from modules import personality_chat_m as pers_chat
 from modules import welcome_m, quiz_m
 from modules import describe_picture_m
+from modules import voice_ai_m
 import logging
 from handlers.flag import *
 import asyncio
@@ -24,20 +25,22 @@ async def exit_and_prompt_talk(update, context):
 
 async def exit_and_prompt_quiz(update, context):
     await update.message.reply_text("😔 Мне пришлось отменить твою команду,"
-                                    " чтобы завершить предыдущий диалог.\n\n"
+                                    " чтобы завершить квиз.\n\n"
                                     "🧠 Повтори команду /quiz.")
     return ConversationHandler.END
 
-# async def des_picture_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-#     logger.warning("📥 des_picture_command вызван")
-#
-#     key = _conversation_session_key(update, context)
-#     logger.warning(f"🔑 CONV SESSION KEY = {key}")
-#
-#     context.user_data.clear()
-#     context.chat_data.clear()
-#
-#     return await des_picture_menu(update, context)
+async def exit_and_prompt_picture(update, context):
+    await update.message.reply_text("😔 Мне пришлось отменить твою команду,"
+                                    " чтобы завершить предыдущую сессию.\n\n"
+                                    "🖼 Повтори команду /picture.")
+    return ConversationHandler.END
+
+async def exit_and_prompt_voice(update, context):
+    await update.message.reply_text("😔 Мне пришлось отменить твою команду,"
+                                    " чтобы завершить предыдущий голосовой диалог.\n\n"
+                                    "🎧 Повтори команду /voice.")
+    return ConversationHandler.END
+
 def listing(application):
     conv_handler = ConversationHandler(
         entry_points=[
@@ -74,6 +77,8 @@ def listing(application):
             CommandHandler("gpt", exit_and_prompt_gpt),
             CommandHandler("talk", exit_and_prompt_talk),
             CommandHandler("quiz", exit_and_prompt_quiz),
+            CommandHandler("picture", exit_and_prompt_picture),
+            CommandHandler("voice", exit_and_prompt_voice),
             CallbackQueryHandler(welcome_m.start, pattern="^start$")
         ],
         per_chat=True
@@ -99,8 +104,10 @@ def listing(application):
             CommandHandler("start", welcome_m.start),
             CommandHandler("gpt", exit_and_prompt_gpt),
             CommandHandler("talk", exit_and_prompt_talk),
-            CallbackQueryHandler(welcome_m.start, pattern="^start$"),
-            CommandHandler("quiz", exit_and_prompt_quiz)
+            CommandHandler("picture", exit_and_prompt_picture),
+            CommandHandler("voice", exit_and_prompt_voice),
+            CommandHandler("quiz", exit_and_prompt_quiz),
+            CallbackQueryHandler(welcome_m.start, pattern="^start$")
         ],
         per_chat=True
     )
@@ -123,6 +130,30 @@ def listing(application):
         allow_reentry=True
     )
 
+    voice_conversation_handler = ConversationHandler(
+        entry_points=[
+            CommandHandler("voice", voice_ai_m.voice_command),
+            CallbackQueryHandler(voice_ai_m.voice_command, pattern="^voice$"),
+        ],
+        states={
+            Flags.VOICE_CHAT: [
+                MessageHandler(filters.VOICE, voice_ai_m.handle_voice)
+            ]
+        },
+        fallbacks=[
+            CommandHandler("start", welcome_m.start),
+            CommandHandler("gpt", exit_and_prompt_gpt),
+            CommandHandler("talk", exit_and_prompt_talk),
+            CommandHandler("quiz", exit_and_prompt_quiz),
+            CommandHandler("picture", exit_and_prompt_picture),
+            CommandHandler("voice", exit_and_prompt_voice),
+            CallbackQueryHandler(welcome_m.start, pattern="^start$")
+        ],
+        per_chat=True,
+        allow_reentry=True
+    )
+
+    application.add_handler(voice_conversation_handler)
     application.add_handler(conv_handler)
     application.add_handler(personality_mes_handler)
     application.add_handler(quiz_conversation)

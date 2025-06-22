@@ -22,7 +22,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
         [InlineKeyboardButton("💬 Общение с личностями", callback_data="talk")],
         [InlineKeyboardButton("🧠 Играть в quiz", callback_data="quiz")],
-        [InlineKeyboardButton("🖼 Распознавание изображений", callback_data="picture")]
+        [InlineKeyboardButton("🖼 Распознавание изображений", callback_data="picture")],
+        [InlineKeyboardButton("🎧 Голосовой ChatGPT", callback_data="voice")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)

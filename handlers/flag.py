@@ -5,3 +5,4 @@ class Flags(Enum):
     SELECTING_TOPIC = auto()
     ANSWERING_QUESTION = auto()
     DESCRIBE_PICTURE = auto()
+    VOICE_CHAT = auto()

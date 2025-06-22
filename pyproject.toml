@@ -12,7 +12,9 @@ dependencies = [
     "openai (>=1.86.0,<2.0.0)",
     "python-dotenv (>=1.1.0,<2.0.0)",
     "requests (>=2.32.4,<3.0.0)",
-    "pillow (>=11.2.1,<12.0.0)"
+    "pillow (>=11.2.1,<12.0.0)",
+    "openai-whisper @ git+https://github.com/openai/whisper.git",
+    "gtts (>=2.5.4,<3.0.0)"
 ]
 
 

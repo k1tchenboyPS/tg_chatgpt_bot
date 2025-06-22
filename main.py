@@ -1,6 +1,6 @@
 import logging
 from telegram.ext import Application
-from config import TG_BOT_TOKEN, GPT_TOKEN
+from config import TG_BOT_TOKEN
 from handlers import handler_command, handler_query, handler_get_message
 import openai
 
