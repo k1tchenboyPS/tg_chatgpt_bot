@@ -120,7 +120,7 @@ async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE, top
         context.user_data['correct_answer'] = correct_answer
 
         message_text = (
-            f"{topic_data['emoji']} <b>Квиз: {topic_data['name']}</b>\n\n"
+            f"📌 <b>Квиз: {topic_data['name']}</b>\n\n"
             f"{question}\n\n"
             f"📊 <b>Счет:</b> {context.user_data['quiz_score']}/{context.user_data['quiz_total']}\n\n"
             "✍️ Напишите ваш ответ (A, B, C или D):"
@@ -270,10 +270,8 @@ async def handle_quiz_callback(update: Update, context: ContextTypes.DEFAULT_TYP
             context.user_data.pop('correct_answer', None)
 
             keyboard = [
-                [InlineKeyboardButton("🎲 Случайный факт", callback_data="random_interface")],
-                [InlineKeyboardButton("🤖 ChatGPT", callback_data="gpt_interface")],
-                [InlineKeyboardButton("👥 Диалог с личностью", callback_data="talk_interface")],
-                [InlineKeyboardButton("🧠 Квиз", callback_data="quiz_interface")]
+                [InlineKeyboardButton("🧠 Новый квиз", callback_data="quiz_interface")],
+                [InlineKeyboardButton("🏠 Вернуться в меню", callback_data="start")]
             ]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
