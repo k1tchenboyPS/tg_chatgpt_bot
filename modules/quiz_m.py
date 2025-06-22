@@ -112,10 +112,11 @@ async def topic_selected(update: Update, context: ContextTypes.DEFAULT_TYPE, top
         chat_history = context.user_data.get("chat_history", [])
         chat_history.append({"role": "user", "content": topic_data['prompt']})
 
-        question = await get_chatgpt_response(chat_history)
+        question_raw = await get_chatgpt_response(chat_history)
+        question = re.sub(r'Правильный ответ.*', '', question_raw, flags=re.IGNORECASE).strip()
         context.user_data['current_question'] = question
 
-        correct_answer = extract_correct_answer(question)
+        correct_answer = extract_correct_answer(question_raw)
         context.user_data['correct_answer'] = correct_answer
 
         message_text = (
