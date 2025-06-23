@@ -1,9 +1,9 @@
+"""Связь кнопок бота с функциями-обработчиками"""
 from modules import random_fact_m, welcome_m, chatgpt_interface_m, personality_chat_m, quiz_m, describe_picture_m
 from telegram.ext import CallbackQueryHandler
 import logging
 
 logger = logging.getLogger(__name__)
-"""Связь кнопок бота с функциями-обработчиками"""
 def listing(application):
     application.add_handler(
         CallbackQueryHandler(random_fact_m.random_fact_callback, pattern="^random_fact$")

@@ -2,7 +2,6 @@ import logging
 from telegram.ext import Application
 from config import TG_BOT_TOKEN
 from handlers import handler_command, handler_query, handler_get_message
-import openai
 
 logging.basicConfig(
 
@@ -11,6 +10,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def main():
+    """Основная функция запуска бота."""
     try:
         application = Application.builder().token(TG_BOT_TOKEN).build()
 

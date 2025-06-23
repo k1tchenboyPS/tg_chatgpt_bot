@@ -1,9 +1,9 @@
+"""Оработка команд"""
 from modules import welcome_m, random_fact_m, chatgpt_interface_m, personality_chat_m, quiz_m, describe_picture_m, voice_ai_m
-from telegram.ext import CommandHandler, ConversationHandler
+from telegram.ext import CommandHandler
 import logging
 
 logger = logging.getLogger(__name__)
-"""Оработка команд"""
 def listing(application):
     application.add_handler(CommandHandler("start", welcome_m.start))
     application.add_handler(CommandHandler("random", random_fact_m.random_fact_callback))
